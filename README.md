@@ -117,13 +117,8 @@ paths of deployed artifact from repository root would be 100%, but the cost woul
 file size for repositories like Maven Central).
 
 As this file is (automatically) published by MC and MRMs, using them is simplest. Manual authoring 
-of these files, while possible, is not recommended. Best is to keep the up to date by 
-downloading as published by remote repositories.
-
-Important: As filtering is "starts with", with prefix `/com/foo` you not enabled only `com.foo:bar.1.0`
-artifact but also `com.foo.bar:baz:1.0` and `com.foo:bar-baz:1.0` and so on. It is important to
-understand that this filter is more like a statement from far end, that you, as client, may
-use to not even attempt to download something that is known to not be there.
+of these files, while possible, is not recommended. Best is to keep them up to date by 
+downloading published files from remote repositories.
 
 Many MRMs and Maven Central itself publishes this file. Some prefixes file examples:
 * Maven Central [prefixes.txt](https://repo.maven.apache.org/maven2/.meta/prefixes.txt)
