@@ -20,18 +20,18 @@ $ mvn -s setting.xml clean package -Dmaven.repo.local=local
 
 The build time (only for relative purposes, depends a lot of workstation, internet speed, etc) for me
 took 02:05 min as reported by Maven. But, just take a peek at full Maven console
-output... (sit down before).
+output... (sit down before doing it).
 
 ## What is happening?
 
-You will notice that all your dependencies are downloaded from Atlassian repository (but same
-would happen with Groovy repository, if that would be the first). Reason is pretty much straightforward: 
+You will notice that all your dependencies are downloaded from Atlassian and Groovy repository! 
+Reason is pretty much straightforward: 
 **both these repositories are "group" repositories**, that contain Maven Central proxy among
 their members as well, hence, all artifacts you expect from MC can be obtained from these
 repositories as well! As Maven goes "round robin" on ordered list of remote repositories, it will
-find everything in first, in this case, Atlassian repository. Hence, as an side-effect, you are basically getting 
-MC Artifacts via Atlassian infrastructure, or Groovy repository if that would be first (as same stands for that as well). 
-Not only is slower, but has a nice dangerous side as well.
+find everything in first, in this case, Groovy repository. Hence, as an side-effect, you are basically getting 
+MC Artifacts via Groovy infrastructure, or Atlassian repository if that would be first 
+(as same stands for that as well). Not only is slower, but has a nice dangerous side as well.
 
 Moreover, we might skim over the fact, that Groovy compiler artifact, present only in `groovy-plugins-release`
 remote repository were asked for from Atlassian as well. This "leakage" of artifact requests is caused
@@ -39,6 +39,10 @@ by the fact that Maven goes "round robin" just to get the needed artifact, by it
 effective POM order) thru remote repositories. This not only adds extra time to build (as 
 HTTP requests are issued only to get 404 response), but also "leaks" your dependencies to
 those repositories that for sure have no such thing.
+
+(note: the rrf-demo project is changing, so things may not happen exactly as above, but the
+point is leakage: Maven asks for things from multiple repositories, and those does not have
+it will still be asked for -- leaks requests)
 
 ## Lets fix this
 

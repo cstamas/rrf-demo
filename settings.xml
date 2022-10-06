@@ -3,22 +3,10 @@
     <profile>
       <id>oss-development</id>
       <repositories>
-        <repository>
+        <repository> <!-- by this doco: https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-maven-repositories-2818705/ -->
           <id>atlassian</id>
           <name>atlassian</name>
           <url>https://packages.atlassian.com/mvn/maven-external/</url>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-        <repository>
-          <id>groovy-plugins-release</id>
-          <name>groovy-plugins-release</name>
-          <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
           <releases>
             <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
@@ -40,19 +28,7 @@
         </repository>
       </repositories>
       <pluginRepositories>
-        <pluginRepository>
-          <id>atlassian</id>
-          <name>atlassian</name>
-          <url>https://packages.atlassian.com/mvn/maven-external/</url>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </pluginRepository>
-        <pluginRepository>
+        <pluginRepository> <!-- by this doco: https://github.com/groovy/groovy-eclipse/wiki/Groovy-Eclipse-Maven-plugin -->
           <id>groovy-plugins-release</id>
           <name>groovy-plugins-release</name>
           <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
