@@ -1,5 +1,9 @@
 # The Nasty Project
 
+General note: the "build time" is presented only for demo purposes (and makes sense only to compare them
+on same computer, as relative numbers). For those curious, this test was done on a Linux laptop using
+WiFi, and using direct repository URLs, no proxies/caches/MRMs involved.
+
 This is an example of a "nasty" project that does all wrong.
 
 It is a very basic project, that uses groovy-eclipse-compiler to compile
@@ -18,8 +22,7 @@ all the needed artifacts):
 $ mvn -s setting.xml clean package -Dmaven.repo.local=local
 ```
 
-The build time (only for relative purposes, depends a lot of workstation, internet speed, etc) for me
-took 02:05 min as reported by Maven. But, just take a peek at full Maven console
+The **build time was 03:01 min** as reported by Maven. But, just take a peek at full Maven console
 output... (sit down before doing it).
 
 ## What is happening?
@@ -39,6 +42,9 @@ by the fact that Maven goes "round robin" just to get the needed artifact, by it
 effective POM order) thru remote repositories. This not only adds extra time to build (as 
 HTTP requests are issued only to get 404 response), but also "leaks" your dependencies to
 those repositories that for sure have no such thing.
+
+Conclusion: not only build time is unacceptable, but you got artifacts that are hosted on
+MC (CDN backed) from other places instead, a mess.
 
 (note: the rrf-demo project is changing, so things may not happen exactly as above, but the
 point is leakage: Maven asks for things from multiple repositories, and those does not have
@@ -65,7 +71,7 @@ $ ~/tmp/apache-maven-3.9.0-SNAPSHOT/bin/mvn -s settings.xml -Dmaven.repo.local=f
   -Daether.remoteRepositoryFilter.prefix=true  -Daether.remoteRepositoryFilter.groupId=true
 ```
 
-The build total time went down to 13.858 s as reported by Maven, and all the things came
+The **build time went down to 43.049 s** as reported by Maven, and all the things came
 from their proper and expected origin. This was RRF in action.
 
 ## What is happening? (part 2)
