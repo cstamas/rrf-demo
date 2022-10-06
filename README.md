@@ -157,3 +157,25 @@ The `atlassian` repository is allowed for 3 groupIds:
 * `com.atlassian.pom` - parent POM, I guess.
 
 From these two remote repositories am not interested in anything else.
+
+## But how?
+
+The RRF currently have two filter implementations: prefix and groupId. To make these filters operate, you 
+have to enable them. In example both were enabled, but there is an important detail: for remote repository 
+not having filter input present, the filter pulls out from "voting"
+(does not participate in filtering). 
+
+Hence, we created following situation:
+
+| Remote Repository      |   Prefix Filter  | GroupId Filter |
+|------------------------|------------------|----------------|
+| central                | active           | inactive       |
+| groovy-plugins-release | inactive         | active         |
+| atlassian              | inactive         | active         |
+
+It resulted in following "constraints":
+* Maven Central asked only for those artifacts it claims it have (prefixes)
+* groovy-plugins-release and atlassian were asked only for allowed groupIds.
+
+In short, enabling filters are not enough, to make the active for a remote repository, you
+must provide them "input data" for given remote repository as well.
