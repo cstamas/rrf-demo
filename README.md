@@ -37,7 +37,7 @@ Moreover, we might skim over the fact, that Groovy compiler artifact, present on
 remote repository were asked for from Atlassian as well. This "leakage" of artifact requests is caused
 by the fact that Maven goes "round robin" just to get the needed artifact, by iterating (in
 effective POM order) thru remote repositories. This not only adds extra time to build (as 
-HTTP requests are issues only to get 404 response), but also "leaks" your dependencies to
+HTTP requests are issued only to get 404 response), but also "leaks" your dependencies to
 those repositories that for sure have no such thing.
 
 ## Lets fix this
@@ -79,24 +79,22 @@ flocal/.remoteRepositoryFilters/
 ```
 
 Second, we enabled two kind of filtering: `groupId` and `prefix`. No POM or settings.xml was changed.
-Not that is good thing, the "nasty project" issues should be fixed after all (at least restore proper
-repository ordering, making Maven Central), but this demo just shows for powerful is filtering.
+Not that its good thing, the "nasty project" issues should be fixed after all (at least restore proper
+repository ordering, making Maven Central first), but this demo just shows how powerful is filtering.
 
 The instructions for remote repository filtering are following:
-* prefix/prefixes-central.txt - contains the list of contained prefixes in Maven Central.
-* groupId/groupId-atlassian.txt - the list of ALLOWED `groupId`s from `atlassian` remote repository.
-* groupId/groupId-groovy-plugins-release.txt - the list of ALLOWED `groupId`s from `groovy-plugins-release` remote repository.
+* `prefix/prefixes-central.txt` - contains the list of contained prefixes in Maven Central.
+* `groupId/groupId-atlassian.txt` - the list of ALLOWED `groupId`s from `atlassian` remote repository.
+* `groupId/groupId-groovy-plugins-release.txt` - the list of ALLOWED `groupId`s from `groovy-plugins-release` remote repository.
 
-Two filter implementations together fixed all issues.
+Two filter implementations together fixed all the problems.
 
 ### Prefixes filter
 
 The prefixes filter relies on file containing list of "repository prefixes" available from given repository. 
-The prefix is essentially "starts with" of Artifact path as translated by Repository Layout. It results that 
-remote repository NOT having some prefix, will not be attempted to fetch artifact having path of missing 
-prefix. Or in other words, only those artifacts will be downloaded from given remote repository, if there
-is a "starts with" match between artifact path translated by layout, and prefixes file published by 
-remote repository.
+The prefix is essentially "starts with" of Artifact path as translated by Repository Layout. Its effect is that 
+only those artifacts will be attempted to be downloaded from given remote repository, if there is a 
+"starts with" match between artifact path translated by layout, and prefixes file published by remote repository.
 
 Example: `com.corp.theproject:api:1.0` artifact, when translated to path by default layout results in
 `com/corp/theproject/api/1.0/api-1.0.jar` path. So the following prefixes may be used to "allow" this artifact 
@@ -109,25 +107,48 @@ Example: `com.corp.theproject:api:1.0` artifact, when translated to path by defa
 
 Prefixes are path prefixes, hence, are kinda filtering other way around, 
 is rather remote repository advising us "do not even bother by coming to me with a path that has no 
-appropriate prefix enlisted in this file". Also, as this file is (automatically) published by
-MC and MRMs, using them is simplest. Manual authoring of these files, while possible, is not 
-recommended. Best is to keep the up to date by downloading as published by remote repositories.
+appropriate prefix enlisted in this file". On the other hand, having a prefix enlisted does not
+provides 100% guarantee that matched artifact is really present! For example presence of `/com/foo`
+prefix does NOT implies that `com.foo:baz:1.0` artifact is present, it merely tells I do have
+something that starts with `/com/foo` (for example `com.foo.baz:lib:1.0`). The depth of published 
+prefixes is usually set by publisher, and is usually 2-3. It all boils down to equilibrium of 
+"best coverage" and "prefixes file size" (ultimately, prefixes file containing all the relative
+paths of deployed artifact from repository root would be 100%, but the cost would be huge
+file size for repositories like Maven Central).
+
+As this file is (automatically) published by MC and MRMs, using them is simplest. Manual authoring 
+of these files, while possible, is not recommended. Best is to keep the up to date by 
+downloading as published by remote repositories.
 
 Important: As filtering is "starts with", with prefix `/com/foo` you not enabled only `com.foo:bar.1.0`
 artifact but also `com.foo.bar:baz:1.0` and `com.foo:bar-baz:1.0` and so on. It is important to
-understand that this filter is more like a statement from far end, than you as client limiting
-what to get from it.
+understand that this filter is more like a statement from far end, that you, as client, may
+use to not even attempt to download something that is known to not be there.
 
 Many MRMs and Maven Central itself publishes this file. Some prefixes file examples:
-* [Maven Central](https://repo.maven.apache.org/maven2/.meta/prefixes.txt)
-* [ASF Releases](https://repository.apache.org/content/repositories/releases/.meta/prefixes.txt)
+* Maven Central [prefixes.txt](https://repo.maven.apache.org/maven2/.meta/prefixes.txt)
+* ASF Releases hosted repository [prefixes.txt](https://repository.apache.org/content/repositories/releases/.meta/prefixes.txt)
 
-The prefixes files are expected in following location by default: `${localRepo}/prefix/prefixes-${remoteRepository.id}.txt`.
+The prefixes files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/prefix/prefixes-${remoteRepository.id}.txt`.
+
+In this example project I just used `curl` to get the `prefixes.txt` as published by Maven Central
+and placed it at expected location under `flocal` local repository.
 
 ### GroupIds filter
 
-The other implementation is filtering based on allowed groupId of Artifact coordinate. In essence, is list
+The other implementation is filtering based on allowed `groupId` of Artifact. In essence, is a list
 of "allowed groupId coordinates from given remote repository".
 
-The groupId files are expected in following location by default: `${localRepo}/groupId/groupId-${remoteRepository.id}.txt`.
+The groupId files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/groupId/groupId-${remoteRepository.id}.txt`.
 
+In this example I added two filters, for two "extra" remote repositories.
+
+The `groovy-plugins-release` is allowed only for one groupId:
+* `org.codehaus.groovy` as both the artifacts are from this group along will all bits like parent POMs.
+
+The `atlassian` repository is allowed for 3 groupIds:
+* `com.atlassian.audit` - the main dependency of example project.
+* `com.atlassian.platform` - dependency or parent or import POM.
+* `com.atlassian.pom` - parent POM, I guess.
+
+From these two remote repositories am not interested in anything else.
