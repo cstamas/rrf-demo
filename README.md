@@ -33,6 +33,13 @@ find everything in first, in this case, Atlassian repository. Hence, as an side-
 MC Artifacts via Atlassian infrastructure, or Groovy repository if that would be first (as same stands for that as well). 
 Not only is slower, but has a nice dangerous side as well.
 
+Moreover, we might skim over the fact, that Groovy compiler artifact, present only in `groovy-plugins-release`
+remote repository were asked for from Atlassian as well. This "leakage" of artifact requests is caused
+by the fact that Maven goes "round robin" just to get the needed artifact, by iterating (in
+effective POM order) thru remote repositories. This not only adds extra time to build (as 
+HTTP requests are issues only to get 404 response), but also "leaks" your dependencies to
+those repositories that for sure have no such thing.
+
 ## Lets fix this
 
 This is where Remote Repository Filtering comes to play. We can fix this ONLY by filtering
@@ -69,19 +76,18 @@ flocal/.remoteRepositoryFilters/
 │   └── groupId-groovy-plugins-release.txt
 └── prefix
     └── prefixes-central.txt
-
 ```
 
 Second, we enabled two kind of filtering: `groupId` and `prefix`. No POM or settings.xml was changed.
 Not that is good thing, the "nasty project" issues should be fixed after all (at least restore proper
-repository ordering, making Maven Central first again), but this is a very good first step.
+repository ordering, making Maven Central), but this demo just shows for powerful is filtering.
 
 The instructions for remote repository filtering are following:
 * prefix/prefixes-central.txt - contains the list of contained prefixes in Maven Central.
 * groupId/groupId-atlassian.txt - the list of ALLOWED `groupId`s from `atlassian` remote repository.
 * groupId/groupId-groovy-plugins-release.txt - the list of ALLOWED `groupId`s from `groovy-plugins-release` remote repository.
 
-Two filter implementations are used to properly filter.
+Two filter implementations together fixed all issues.
 
 ### Prefixes filter
 
