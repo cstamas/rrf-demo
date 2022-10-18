@@ -27,24 +27,24 @@ output... (sit down before doing it).
 
 ## What is happening?
 
-You will notice that all your dependencies are downloaded from Atlassian and Groovy repository! 
-Reason is pretty much straightforward: 
+You will notice that most if not all of your plugins and dependencies are downloaded 
+from Atlassian and Groovy repository! Reason is pretty much straightforward: 
 **both these repositories are "group" repositories**, that contain Maven Central proxy among
 their members as well, hence, all artifacts you expect from MC can be obtained from these
 repositories as well! As Maven goes "round robin" on ordered list of remote repositories, it will
-find everything in first, in this case, Groovy repository. Hence, as an side-effect, you are basically getting 
-MC Artifacts via Groovy infrastructure, or Atlassian repository if that would be first 
-(as same stands for that as well). Not only is slower, but has a nice dangerous side as well.
+find everything in first repository. Hence, as an side-effect, you are basically getting 
+MC Artifacts via Groovy or Atlassian infrastructure, something you should not do. 
+This is not only slower, but has a peculiar danger edge as well.
 
-Moreover, we might skim over the fact, that Groovy compiler artifact, present only in `groovy-plugins-release`
-remote repository were asked for from Atlassian as well. This "leakage" of artifact requests is caused
-by the fact that Maven goes "round robin" just to get the needed artifact, by iterating (in
+Moreover, we can notice that Groovy compiler artifact, **present only** in `groovy-plugins-release`
+remote repository may be asked for from Atlassian as well. This "leakage" of artifact requests is caused
+again by the fact of "round robin" processing of Maven, by iterating (in
 effective POM order) thru remote repositories. This not only adds extra time to build (as 
 HTTP requests are issued only to get 404 response), but also "leaks" your dependencies to
-those repositories that for sure have no such thing.
+those repository maintainers as well (they will have all these in their access logs).
 
 Conclusion: not only build time is unacceptable, but you got artifacts that are hosted on
-MC (CDN backed) from other places instead, a mess.
+Maven Central (CDN backed) from other places instead, this is a mess.
 
 (note: the rrf-demo project is changing, so things may not happen exactly as above, but the
 point is leakage: Maven asks for things from multiple repositories, and those does not have
