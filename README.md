@@ -156,6 +156,13 @@ The `atlassian` repository is allowed for 3 groupIds:
 
 From these two remote repositories am not interested in anything else.
 
+Note: the list of allowed groupIds I assembled by "trial and error". The two groupIds for explicit
+dependencies I knew, then tried the build, and observed what other groupId are required. The Groovy 
+was "done" in 1 step, while for Atlassian I had 3 iterations.
+
+Important: the GroupId filter allows "recording" of encountered grouoIds as well, that can be used as
+starting point as well.
+
 ## But how?
 
 The RRF currently have two filter implementations: prefix and groupId. To make these filters operate, you 
