@@ -71,7 +71,7 @@ $ ~/tmp/apache-maven-3.9.0-SNAPSHOT/bin/mvn -s settings.xml -Dmaven.repo.local=f
 ```
 
 The **build time went down to 43.049 seconds** as reported by Maven, and all the things came
-from their proper and expected origin and no leakage happened. This was RRF in action.
+from their proper and expected origin and no request leakage happened. This was RRF in action.
 
 ## What is happening? (part 2)
 
