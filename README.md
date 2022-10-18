@@ -146,13 +146,15 @@ The `atlassian` repository is allowed for 3 groupIds:
 
 From these two remote repositories am not interested in anything else.
 
-Note: the list of allowed groupIds I assembled by "trial and error". The two groupIds for explicit
+The list of allowed groupIds I assembled by "trial and error". The two groupIds for explicit
 dependencies I knew, then tried the build, and observed what other groupId are required. The Groovy 
 was "satisfied" with this 1 entry, while for Atlassian I had 3 iterations to collect the 3 "allowed"
 groupIds.
 
-Important: the GroupId filter allows "recording" of encountered groupIds as well, that can be used as
-starting point as well (after "recording" done you can edit it, remove or add entries).
+The GroupId filter allows "recording" of encountered groupIds as well, that can be used as
+starting point: after "recording" done, one can edit it, remove or add entries as needed. When
+groupId filter set to "record", it does NOT filter, but instead collects all the encountered 
+groupIds per remote repository and saves them into properly placed file(s).
 
 ## But how?
 
