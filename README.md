@@ -68,11 +68,11 @@ that this time we use `flocal` local repository, is important bit:
 
 ```
 $ ~/tmp/apache-maven-3.9.0-SNAPSHOT/bin/mvn -s settings.xml -Dmaven.repo.local=flocal clean package \
-  -Daether.remoteRepositoryFilter.prefix=true  -Daether.remoteRepositoryFilter.groupId=true
+  -Daether.remoteRepositoryFilter.prefixes=true  -Daether.remoteRepositoryFilter.groupId=true
 ```
 
 The **build time went down to 43.049 s** as reported by Maven, and all the things came
-from their proper and expected origin. This was RRF in action.
+from their proper and expected origin and no leakage happened. This was RRF in action.
 
 ## What is happening? (part 2)
 
@@ -91,9 +91,9 @@ Not that its good thing, the "nasty project" issues should be fixed after all (a
 repository ordering, making Maven Central first), but this demo just shows how powerful is filtering.
 
 The instructions for remote repository filtering are following:
-* `prefix/prefixes-central.txt` - contains the list of contained prefixes in Maven Central.
-* `groupId/groupId-atlassian.txt` - the list of ALLOWED `groupId`s from `atlassian` remote repository.
-* `groupId/groupId-groovy-plugins-release.txt` - the list of ALLOWED `groupId`s from `groovy-plugins-release` remote repository.
+* `prefixes-central.txt` - contains the list of ALLOWED prefixes in Maven Central.
+* `groupId-atlassian.txt` - the list of ALLOWED `groupId`s from `atlassian` remote repository.
+* `groupId-groovy-plugins-release.txt` - the list of ALLOWED `groupId`s from `groovy-plugins-release` remote repository.
 
 Two filter implementations together fixed all the problems.
 
@@ -132,7 +132,7 @@ Many MRMs and Maven Central itself publishes this file. Some prefixes file examp
 * Maven Central [prefixes.txt](https://repo.maven.apache.org/maven2/.meta/prefixes.txt)
 * ASF Releases hosted repository [prefixes.txt](https://repository.apache.org/content/repositories/releases/.meta/prefixes.txt)
 
-The prefixes files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/prefix/prefixes-${remoteRepository.id}.txt`.
+The prefixes files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/prefixes-${remoteRepository.id}.txt`.
 
 In this example project I just used `curl` to get the `prefixes.txt` as published by Maven Central
 and placed it at expected location under `flocal` local repository.
@@ -142,7 +142,7 @@ and placed it at expected location under `flocal` local repository.
 The other implementation is filtering based on allowed `groupId` of Artifact. In essence, is a list
 of "allowed groupId coordinates from given remote repository".
 
-The groupId files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/groupId/groupId-${remoteRepository.id}.txt`.
+The groupId files are expected in following location by default: `${localRepo}/.remoteRepositoryFilters/groupId-${remoteRepository.id}.txt`.
 
 In this example I added two filters, for two "extra" remote repositories.
 
@@ -151,8 +151,8 @@ The `groovy-plugins-release` is allowed only for one groupId:
 
 The `atlassian` repository is allowed for 3 groupIds:
 * `com.atlassian.audit` - the main dependency of example project.
-* `com.atlassian.platform` - dependency or parent or import POM.
-* `com.atlassian.pom` - parent POM, I guess.
+* `com.atlassian.platform` - dependency or parent or import POM, I guess.
+* `com.atlassian.pom` - dependency or parent or import POM, I guess.
 
 From these two remote repositories am not interested in anything else.
 
