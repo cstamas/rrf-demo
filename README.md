@@ -2,11 +2,11 @@
 
 This is an example of a "nasty" project that does all wrong.
 
-It is a very basic project, that uses groovy-eclipse-compiler to compile
-sources and for example sake, it depends on Atlassian Audit API artifact 
-`com.atlassian.audit:atlassian-audit-api` not available from Maven Central.
+It is a very basic project, that uses `groovy-eclipse-compiler` to compile
+sources, and for example sake, it depends on Atlassian Audit API artifact 
+`com.atlassian.audit:atlassian-audit-api`, none of these are available from Maven Central.
 
-As there are artifacts not present on Maven Central, extra repositories needs to be
+As these two are not present on Maven Central, extra repositories needs to be
 added to project, and to make this example "even worse", this project 
 uses custom `settings.xml` to achieve that.
 
