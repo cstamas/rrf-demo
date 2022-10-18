@@ -160,8 +160,8 @@ Note: the list of allowed groupIds I assembled by "trial and error". The two gro
 dependencies I knew, then tried the build, and observed what other groupId are required. The Groovy 
 was "done" in 1 step, while for Atlassian I had 3 iterations.
 
-Important: the GroupId filter allows "recording" of encountered grouoIds as well, that can be used as
-starting point as well.
+Important: the GroupId filter allows "recording" of encountered groupIds as well, that can be used as
+starting point as well (after "recording" done you can edit it, remove or add entries).
 
 ## But how?
 
