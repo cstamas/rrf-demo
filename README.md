@@ -137,7 +137,7 @@ The groupId files are expected in following location by default: `${localRepo}/.
 In this example I added two filters, for two "extra" remote repositories.
 
 The `groovy-plugins-release` is allowed only for one groupId:
-* `org.codehaus.groovy` as both the artifacts are from this group along will all bits like parent POMs.
+* `org.codehaus.groovy` as both the artifacts are from this group (along will all bits like parent POMs, I guess).
 
 The `atlassian` repository is allowed for 3 groupIds:
 * `com.atlassian.audit` - the main dependency of example project.
@@ -148,7 +148,8 @@ From these two remote repositories am not interested in anything else.
 
 Note: the list of allowed groupIds I assembled by "trial and error". The two groupIds for explicit
 dependencies I knew, then tried the build, and observed what other groupId are required. The Groovy 
-was "done" in 1 step, while for Atlassian I had 3 iterations.
+was "satisfied" with this 1 entry, while for Atlassian I had 3 iterations to collect the 3 "allowed"
+groupIds.
 
 Important: the GroupId filter allows "recording" of encountered groupIds as well, that can be used as
 starting point as well (after "recording" done you can edit it, remove or add entries).
