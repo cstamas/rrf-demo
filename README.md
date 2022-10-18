@@ -59,8 +59,8 @@ custom settings XML to achieve this fix).
 For this, you need following things:
 
 * local build of maven-resolver PR https://github.com/apache/maven-resolver/pull/197
-* local build of maven-3.9.x branch (w/ change to use local maven-resolver build)
-* deployed the custom Maven build somewhere
+* local build of maven-3.9.x PR https://github.com/apache/maven/pull/831
+* unpack the custom Maven build somewhere
 
 After all that above, let's build this nasty project using following commands (assuming
 you unpacked custom Maven build to ~/tmp/apache-maven-3.9.0-SNAPSHOT directory). Observe 
@@ -81,11 +81,9 @@ instructions for maven-resolver:
 
 ```
 flocal/.remoteRepositoryFilters/
-├── groupId
-│   ├── groupId-atlassian.txt
-│   └── groupId-groovy-plugins-release.txt
-└── prefix
-    └── prefixes-central.txt
+├── groupId-atlassian.txt
+├── groupId-groovy-plugins-release.txt
+└── prefixes-central.txt
 ```
 
 Second, we enabled two kind of filtering: `groupId` and `prefix`. No POM or settings.xml was changed.
