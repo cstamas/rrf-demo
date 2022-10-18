@@ -30,14 +30,14 @@ You will notice that most if not all of your plugins and dependencies are downlo
 from Atlassian and Groovy repository! Reason is pretty much straightforward: 
 **both these repositories are "group" repositories**, that contain Maven Central proxy among
 their members as well, hence, all artifacts you expect from MC can be obtained from these
-repositories as well! As Maven goes "round robin" on ordered list of remote repositories, it will
+repositories as well! As Maven goes "loop" on ordered list of remote repositories, it will
 find everything in first repository. Hence, as an side-effect, you are basically getting 
 MC Artifacts via Groovy or Atlassian infrastructure, something you should not do. 
 This is not only slower, but has a peculiar danger edge as well.
 
 Moreover, we can notice that Groovy compiler artifact, **present only** in `groovy-plugins-release`
 remote repository may be asked for from Atlassian as well. This "leakage" of artifact requests is caused
-again by the fact of "round robin" processing of Maven, by iterating (in
+again by the fact of looping repositoeies of Maven, by iterating (in
 effective POM order) thru remote repositories. This not only adds extra time to build (as 
 HTTP requests are issued only to get 404 response), but also "leaks" your dependencies to
 those repository maintainers as well (they will have all these in their access logs).
