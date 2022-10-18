@@ -1,19 +1,18 @@
 # The Nasty Project
 
-General note: the "build time" is presented only for demo purposes (and makes sense only to compare them
-on same computer, as relative numbers). For those curious, this test was done on a Linux laptop using
-WiFi, and using direct repository URLs, no proxies/caches/MRMs involved.
-
 This is an example of a "nasty" project that does all wrong.
 
 It is a very basic project, that uses groovy-eclipse-compiler to compile
-sources (set up as explained here https://github.com/groovy/groovy-eclipse/wiki/Groovy-Eclipse-Maven-plugin).
+sources and for example sake, it depends on Atlassian Audit API artifact 
+`com.atlassian.audit:atlassian-audit-api` not available from Maven Central.
 
-Moreover for example sake, it depends on Atlassian Audit API artifact `com.atlassian.audit:atlassian-audit-api` 
-not available from Maven Central, but from Atlasian Maven Proxy (also set up as explained here 
-https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-maven-repositories-2818705/).
+As there are artifacts not present on Maven Central, extra repositories needs to be
+added to project, and to make this example "even worse", this project 
+uses custom `settings.xml` to achieve that.
 
-Finally, to make this example "even worse", this project uses custom `settings.xml`.
+The extra repositories are set up as explained in corresponding documentations:
+* Groovy Eclipse Compiler: https://github.com/groovy/groovy-eclipse/wiki/Groovy-Eclipse-Maven-plugin
+* Atlassian: https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-maven-repositories-2818705/
 
 To build this "nasty" project, do this (use pristine local repository, to force Maven download
 all the needed artifacts):
@@ -22,7 +21,7 @@ all the needed artifacts):
 $ mvn -s setting.xml clean package -Dmaven.repo.local=local
 ```
 
-The **build time was 03:01 min** as reported by Maven. But, just take a peek at full Maven console
+The **build time was 3:01 minutes** as reported by Maven. But, just take a peek at full Maven console
 output... (sit down before doing it).
 
 ## What is happening?
@@ -52,7 +51,7 @@ it will still be asked for -- leaks requests)
 
 ## Lets fix this
 
-This is where Remote Repository Filtering comes to play. We can fix this ONLY by filtering
+This is where Remote Repository Filtering comes to play. **We can fix this solely by filtering**
 (while this "nasty" project does several things wrongly, we will NOT touch any of the POM or
 custom settings XML to achieve this fix).
 
@@ -71,7 +70,7 @@ $ ~/tmp/apache-maven-3.9.0-SNAPSHOT/bin/mvn -s settings.xml -Dmaven.repo.local=f
   -Daether.remoteRepositoryFilter.prefixes=true  -Daether.remoteRepositoryFilter.groupId=true
 ```
 
-The **build time went down to 43.049 s** as reported by Maven, and all the things came
+The **build time went down to 43.049 seconds** as reported by Maven, and all the things came
 from their proper and expected origin and no leakage happened. This was RRF in action.
 
 ## What is happening? (part 2)
@@ -184,3 +183,10 @@ It resulted in following "constraints":
 
 In short, enabling filters are not enough, to make the active for a remote repository, you
 must provide them "input data" for given remote repository as well.
+
+### Remarks
+
+General note: the "build time" is presented only for demo purposes (and makes sense only to compare them
+on same computer, as relative numbers). For those curious, this test was done on a Linux laptop using
+WiFi, and using direct repository URLs, no proxies/caches/MRMs involved.
+
