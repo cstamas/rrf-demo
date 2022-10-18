@@ -103,25 +103,16 @@ The prefix is essentially "starts with" of Artifact path as translated by Reposi
 only those artifacts will be attempted to be downloaded from given remote repository, if there is a 
 "starts with" match between artifact path translated by layout, and prefixes file published by remote repository.
 
-Example: `com.corp.theproject:api:1.0` artifact, when translated to path by default layout results in
-`com/corp/theproject/api/1.0/api-1.0.jar` path. So the following prefixes may be used to "allow" this artifact 
-(and more!):
-
-* `/com/corp/theproject/api/1.0` - would allow only 1.0 version of this Artifact
-* `/com/corp/theproject/api` - would allow any version of this Artifact 
-* `/com/corp/theproject/` - would allow any artifactId and version of this Artifact
-* `/com/corp/` - would allow whole groupId of this artifact
-
-Prefixes are path prefixes, hence, are kinda filtering other way around, 
+Prefixes are usually published by remote repositories, hence, are kinda filtering other way around: 
 is rather remote repository advising us "do not even bother by coming to me with a path that has no 
 appropriate prefix enlisted in this file". On the other hand, having a prefix enlisted does not
 provides 100% guarantee that matched artifact is really present! For example presence of `/com/foo`
-prefix does NOT implies that `com.foo:baz:1.0` artifact is present, it merely tells I do have
-something that starts with `/com/foo` (for example `com.foo.baz:lib:1.0`). The depth of published 
-prefixes is usually set by publisher, and is usually 2-3. It all boils down to equilibrium of 
-"best coverage" and "prefixes file size" (ultimately, prefixes file containing all the relative
-paths of deployed artifact from repository root would be 100%, but the cost would be huge
-file size for repositories like Maven Central).
+prefix does NOT implies that `com.foo:baz:1.0` artifact is present, it merely tells "I do have
+something that starts with `/com/foo`" (for example `com.foo.baz:lib:1.0`). The depth of published 
+prefixes is usually set by publisher, and is usually 2-3 or 4. It all boils down to equilibrium of 
+"best coverage" and "file size" (ultimately, prefixes file containing all the relative
+paths of deployed artifact from repository root would be 100% coverage, but the cost would be huge
+file size for huge repositories like Maven Central).
 
 As this file is (automatically) published by MC and MRMs, using them is simplest. Manual authoring 
 of these files, while possible, is not recommended. Best is to keep them up to date by 
