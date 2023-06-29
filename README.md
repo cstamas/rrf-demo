@@ -15,14 +15,22 @@ The extra repositories are set up as explained in corresponding documentations:
 * Atlassian: https://developer.atlassian.com/server/framework/atlassian-sdk/atlassian-maven-repositories-2818705/
 
 To build this "nasty" project, do this (use pristine local repository, to force Maven download
-all the needed artifacts):
+all the needed artifacts). and **use Maven 3.8.x**:
 
 ```
-$ mvn -s setting.xml clean package -Dmaven.repo.local=local
+$ mvn -V -s setting.xml clean package
 ```
 
-The **build time was 3:01 minutes** as reported by Maven. But, just take a peek at full Maven console
+The **build time was 2:01 minutes** as reported by Maven 3.8.x. But, just take a peek at full Maven console
 output... (sit down before doing it).
+
+Now, nuke local repository (`rm -R repo-local`) and **use Maven 3.9.3** to build same project:
+
+```
+$ mvn -V -s setting.xml clean package
+```
+
+The **build time was 0:20 seconds** as reported by Maven 3.9.x.
 
 ## What is happening?
 
@@ -55,23 +63,7 @@ This is where Remote Repository Filtering comes to play. **We can fix this solel
 (while this "nasty" project does several things wrongly, we will NOT touch any of the POM or
 custom settings XML to achieve this fix).
 
-For this, you need following things:
-
-* local build of maven-resolver PR https://github.com/apache/maven-resolver/pull/197
-* local build of maven-3.9.x PR https://github.com/apache/maven/pull/831
-* unpack the custom Maven build somewhere
-
-After all that above, let's build this nasty project using following commands (assuming
-you unpacked custom Maven build to ~/tmp/apache-maven-3.9.0-SNAPSHOT directory). Observe 
-that this time we use `flocal` local repository, is important bit:
-
-```
-$ ~/tmp/apache-maven-3.9.0-SNAPSHOT/bin/mvn -s settings.xml -Dmaven.repo.local=flocal clean package \
-  -Daether.remoteRepositoryFilter.prefixes=true  -Daether.remoteRepositoryFilter.groupId=true
-```
-
-The **build time went down to 43.049 seconds** as reported by Maven, and all the things came
-from their proper and expected origin and no request leakage happened. This was RRF in action.
+Maven 3.9.3 used resolver contains "remote repository filtering" (RRF) implementation.
 
 ## What is happening? (part 2)
 
@@ -79,7 +71,7 @@ First, notice how we used different local repository `flocal`. That repository c
 instructions for maven-resolver:
 
 ```
-flocal/.remoteRepositoryFilters/
+.mvn/rrf/
 ├── groupId-atlassian.txt
 ├── groupId-groovy-plugins-release.txt
 └── prefixes-central.txt

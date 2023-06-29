@@ -1,4 +1,5 @@
 <settings>
+  <localRepository>${user.dir}/local-repo</localRepository>
   <profiles>
     <profile>
       <id>oss-development</id>

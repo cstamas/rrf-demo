@@ -1,0 +1,8 @@
+As this build should work in Maven 3.8.x and Maven 3.9.x, it should support features supported by both.
+Comments in this file are NOT supported by 3.8.x. Hence, comments are next to it:
+
+This file does:
+- enables RRF group filtering
+- enables RRF prefix filtering
+- includes filter configurations in .mvn/rrf directory
+
