@@ -6,3 +6,11 @@ This file does:
 - enables RRF prefix filtering
 - includes filter configurations in .mvn/rrf directory
 
+
+NOTE1: Due https://issues.apache.org/jira/browse/MRESOLVER-375 this line "-DchecksumAlgorithms=SHA-512" is added,
+but the proper line (as documented) is line above. This was done for Maven 3.9.3 to make example work, as it 
+has broken TC config. To be fixed in resolver 1.9.14 and probably Maven 3.9.4.
+
+NOTE2: The `aether.artifactResolver.postProcessor.trustedChecksums` feature is DISABLED on purpose, as if you insect
+the checksums file, you will notice that checksum is (intentionally) broken, prefixed with "xxx". If you remove that, 
+and enable trustedChecksums feature, it should work.
