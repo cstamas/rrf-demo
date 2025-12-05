@@ -22,7 +22,7 @@ $ rm -R local-repo   <<< if running subsequent time
 $ mvn -V -s settings.xml package
 ```
 
-The **build time was 2:01 minutes** as reported by Maven 3.8.x. But, just take a peek at full Maven console
+The **build time was 2:28 minutes** as reported by Maven 3.8.x. But, just take a peek at full Maven console
 output... (sit down before doing it).
 
 Now, nuke local repository (`rm -R repo-local`) and **use Maven 3.9.3** to build same project:
