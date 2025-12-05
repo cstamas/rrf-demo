@@ -18,7 +18,8 @@ To build this "nasty" project, do this (use pristine local repository, to force 
 all the needed artifacts). and **use Maven 3.8.x**:
 
 ```
-$ mvn -V -s setting.xml clean package
+$ rm -R local-repo   <<< if running subsequent time
+$ mvn -V -s settings.xml package
 ```
 
 The **build time was 2:01 minutes** as reported by Maven 3.8.x. But, just take a peek at full Maven console
@@ -27,7 +28,8 @@ output... (sit down before doing it).
 Now, nuke local repository (`rm -R repo-local`) and **use Maven 3.9.3** to build same project:
 
 ```
-$ mvn -V -s setting.xml clean package
+$ rm -R local-repo   <<< if running subsequent time
+$ mvn -V -s settings.xml clean package
 ```
 
 The **build time was 0:20 seconds** as reported by Maven 3.9.x.
